@@ -7,6 +7,7 @@ import sqlalchemy as sa
 from app.models import User
 from urllib.parse import urlsplit
 from app.forms import RegistrationForm
+from datetime import datetime, timezone
 
 @app.route('/')
 @app.route('/index')
@@ -70,3 +71,9 @@ def user(username):
         {'author': user, 'body': "in owq owiepoq oiqwpeiqp"}
     ]
     return render_template('user.html', user=user, posts=posts)
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_time = datetime.now(timezone.utc)
+        db.session.commit()
