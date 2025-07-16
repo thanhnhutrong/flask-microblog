@@ -4,8 +4,6 @@ A full featured blog application using :snake: Python Flask framework where an a
 
 ---
 
-**Live Demo**: [Demo](http://awesome-blogging.herokuapp.com/)
-
 **Some Screenshot**: [Screenshot](some-cool-features.md)
 
 ## Running the application
