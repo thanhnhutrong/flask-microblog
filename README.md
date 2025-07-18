@@ -11,7 +11,7 @@ A full featured blog application using :snake: Python Flask framework where an a
 ***Clone the repository***
 
 ```bash
-git clone https://github.com/ifat-mohit/flask-microblog.git
+git clone https://github.com/thanhnhutrong/flask-microblog.git
 ```
 
 ***Install virual environment and all necessary dependencies***
