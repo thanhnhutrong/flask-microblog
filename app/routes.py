@@ -1,12 +1,11 @@
 from app import app
 from flask import render_template, flash, redirect, url_for, request
-from app.forms import LoginForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app import db
 import sqlalchemy as sa
 from app.models import User
 from urllib.parse import urlsplit
-from app.forms import RegistrationForm
 from datetime import datetime, timezone
 
 @app.route('/')
@@ -25,6 +24,7 @@ def index():
         }
     ]
     return render_template('index.html', title='Home', posts=posts)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -67,13 +67,28 @@ def register():
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     posts = [
-        {'author': user, 'body': 'Xin chao moi nguoi'},
-        {'author': user, 'body': "in owq owiepoq oiqwpeiqp"}
+        {'author': user, 'body': 'Hello may con ga thi biet gi ve bo may'}, 
+        {'author': user, 'body': 'Toi la Trong Thanh, toi dang hoc flask'}
     ]
     return render_template('user.html', user=user, posts=posts)
 
-@app.before_request
+@app.before_request # ham nay se hoat dong ngay truoc view function -> kiem tra xem nguoi dung co dang nhap khong -> neu co update time hien tai vao database
 def before_request():
     if current_user.is_authenticated:
         current_user.last_time = datetime.now(timezone.utc)
+        db.session.commit() # khong can db.session.add() nua vi session da ghi nho user bang flask_login
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
         db.session.commit()
+        flash('Your change has been saved!')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+    return render_template('edit_profile.html', title='Edit profile', form=form)
