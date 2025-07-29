@@ -11,4 +11,4 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
-from app import routes, models # import package routes, nen import o cuoi vi can app variable
+from app import routes, models, errors # import package routes, nen import o cuoi vi can app variable
