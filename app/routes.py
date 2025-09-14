@@ -20,7 +20,7 @@ def index():
         },
         {
             'author' : {'username' : 'hiyen'},
-            'body' : 'Hello Thanh, i miss u so much.'
+            'body' : 'Hello Thanh, how are you today?'
         }
     ]
     return render_template('index.html', title='Home', posts=posts)
@@ -31,8 +31,8 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session.scalar(
-            sa.select(User).where(User.username == form.username.data))
+        user = db.session.scalar( # db.session.scalar để trả về giá trị duy nhất của query
+            sa.select(User).where(User.username == form.username.data)) # bên trong là query
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -67,8 +67,8 @@ def register():
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     posts = [
-        {'author': user, 'body': 'Hello may con ga thi biet gi ve bo may'}, 
-        {'author': user, 'body': 'Toi la Trong Thanh, toi dang hoc flask'}
+        {'author': user, 'body': 'Hello co gang len nhe, roi se duoc thoi'}, 
+        {'author': user, 'body': 'Nếu hôm nay bỏ cuộc, thì sẽ thất bại mãi về sau'}
     ]
     return render_template('user.html', user=user, posts=posts)
 
